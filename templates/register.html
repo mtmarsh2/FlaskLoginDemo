@@ -1,0 +1,65 @@
+{% extends "layout.html" %} {% block body %}
+
+<div class="container">
+    <div class="row" style="margin-top:150px;">
+
+        <div class="col-lg-12">
+            <div class="intro-text">
+                <div class="col-lg-8 col-lg-offset-2" style="text-align:center;"><br>
+                    <form action="" method=post class="form-horizontal" id="register_form">
+                        <div id="errors"></div>
+                        <div id="success"></div>
+                        <div id="formFields">
+                            <div class="form-group">
+                                <label for="inputFilterUsername" class="col-md-4 control-label relaxed">Username</label>
+                                <div class="col-md-6">
+                                    <input name="account_name" type="text" class="form-control" id="inputFilterEmail" placeholder="" required data-validation-required-message="Please enter the email where you want to receive on the filter">
+                                </div>
+                                <div class="col-sm-4"></div><br>
+                                <p class="help-block text-danger"></p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="inputFilterPassword" class="col-md-4 control-label relaxed">Password</label>
+                                <div class="col-md-6">
+                                    <input name="password" type="password" class="form-control" id="inputFilterPassword" placeholder="" required data-validation-required-message="Please enter the email where you want to receive on the filter">
+                                </div>
+                                <p class="help-block text-danger"></p>
+                            </div>
+                            <button class="btn btn-default" id="register_submit" type="submit">Register Now</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+  window.onload = function(e) {
+    $("#register_submit").click(function(event) {
+        $("#errors").empty();
+        $("#success").empty();
+        event.preventDefault();
+        data = $("#register_form").serialize()
+        $.ajax({
+            type: "POST",
+            url: "/register",
+            data: data,
+            dataType: "text",
+            success: function(result) {
+                document.location = '/'
+            },
+            error: function(result) {
+                var errors = JSON.parse(result.responseText).errors;
+
+                for (var i = 0; i < errors.length; i++) {
+                    $("#errors").append("<p style='text-align:center;color:#cc0000;'>" + errors[i] + "</p>")
+                }
+            }
+        });
+    })
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "layout.html" %} {% block body %}
+
+<div class="container">
+    <div class="row" style="margin-top:150px;text-align:center;">
+        <div class="col-lg-12">
+            <div class="intro-text">
+                <div class="col-lg-8 col-lg-offset-2"><br>
+                    <form action="" method=post class="form-horizontal" id="login_form">
+                        <div id="errors" style="text-align"></div>
+                        <div id="success"></div>
+                        <div class="form-group">
+                            <label for="inputFilterUsername" class="col-md-4 control-label relaxed">Account name</label>
+                            <div class="col-md-6">
+                                <input name="account_name" type="text" class="form-control" placeholder="">
+                            </div>
+                            <div class="col-sm-4"></div>
+                            <p class="help-block text-danger"></p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputFilterPassword" class="col-md-4 control-label relaxed">Password</label>
+                            <div class="col-md-6">
+                                <input name="password" type="password" class="form-control" placeholder="">
+                            </div>
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <button style="text-align:center; margin-bottom:10px; margin-left:70px;" class="btn btn-default" id="login_submit" type="submit">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    window.onload = function(e) {
+        $("#login_submit").click(function(event) {
+            event.preventDefault();
+            data = $("#login_form").serialize()
+            $.ajax({
+                type: "POST",
+                url: "/login",
+                data: data,
+                dataType: "text",
+                success: function(resultData) {
+                    document.location = "/"
+                },
+                error: function(result) {
+                    $("#errors").empty();
+                    var errors = JSON.parse(result.responseText).errors;
+
+                    for (var i = 0; i < errors.length; i++) {
+                        $("#errors").append("<p style='text-align:center;color:#cc0000;'>" + errors[i] + "</p>")
+                    }
+
+                }
+            });
+        })
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "layout.html" %} {% set active_page = "home" %} {% set title = "Home" %} {% block css %} {% endblock %} {% block body %}
+
+<div class="container" style="margin-top:100px;margin-bottom:100px;">
+    <div class="row">
+        <h3>Enter a key below to get the value. If just a key is entered below, and no value, then the server will return the key's value. If both a key and value are entered, the server will set the value of the key, to the one below.<h3>
+        <div class="form-group">
+          <input id="keyInput" type="text" class="form-control" placeholder="Enter key" name="name">
+          <input id="valueInput" type="text" class="form-control" placeholder="Enter key" name="name">
+        </div>
+        <button id="submitButton" type="submit" class="btn btn-default">Submit</button>
+        <p id="valueReturned"></p>
+        <p id="errorMessage"></p>
+    </div>
+</div>
+
+{% block scripts %}
+
+<script>
+    window.onload = function() {
+
+        $("#submitButton").click(function() {
+            $("#valueReturned").empty();
+            $("#errorMessage").empty();
+            var keyValue = $("#keyInput").val();
+            var valueInput = $("#valueInput").val();
+            var url;
+
+            if (!valueInput) {
+              url = "/get/" + keyValue;
+              $.ajax({
+                  type: "GET",
+                  url: url,
+                  error: function(data) {
+                    $("#errorMessage").text(data.responseJSON.message);
+                  },
+                  success: function(data) {
+                    debugger;
+                      $("#valueReturned").text(data.value);
+                  }
+              });
+            } else {
+              url = "/set/" + keyValue;
+              $.ajax({
+                  type: "POST",
+                  data: {'value': valueInput},
+                  url: url,
+                  error: function(data) {
+                    $("#errorMessage").text(data.responseJSON.message);
+                  },
+                  success: function(data) {
+                      $("#valueReturned").text(data.value);
+                  }
+              });
+            }
+        });
+    }
+  </script>
+{% endblock %}
+
+{% endblock %}
